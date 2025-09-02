@@ -13,14 +13,16 @@ import { useState, useEffect } from 'react'
     }, [])
 console.log(data)
 return (
+  
   <div>
     <h1>Adams Coffee Supply</h1>
     <ul>
       {data.map((item) => (
-    <li key={item.id}>{item.Item_Name}, {item.Description}, {item.Quantity}</li>
+    <li key={item.id}>{item.item_name}, {item.description}, {item.quantity}</li>
 ))}
     </ul>
   </div>
 )
 }
 export default App
+

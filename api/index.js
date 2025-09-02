@@ -29,6 +29,19 @@ app.post('/users/register', function(req, res) {
     .catch(err => res.status(500).json({ error: err.message}))
 })
 
+app.post('/users/login', (req, res) => {
+  const { username, password } = req.body;
+  knex('users')
+  .where({ username, password })
+  .first()
+  .then(user => {
+    if (!user) return res.status(400).json({
+      message: 'Invalid login'})
+      res.json({ id: user.id, first_name: user.first_name, last_name: user.last_name, username: user.username})
+  })
+  .catch(err => res.status(500).json({error: err.message}))
+})
+
 app.get('/coffee', function(req, res) {
   knex('item')
     .select('*')
@@ -53,6 +66,38 @@ app.get('/coffee/:id', function(req, res){
   })
   .catch(err => res.status(500).json({ error: err.message}));
 });
+
+app.post('/coffee', (req, res) => {
+  const item = req.body;
+  knex('item')
+  .insert(item)
+  .then(() => res.json({ message: 'item added'}))
+  .catch(err => res.status(500).json({error: err.message}))
+})
+
+app.patch('/coffee/:id', (req, res) => {
+  const updates = req.body;
+  knex('item')
+  .where({ id: req.params.id })
+  .update(updates)
+  .then (count => {
+    if (count === 0) return res.status(404).json({ 
+      message: 'Try again'})
+      res.json({ message: 'item updated'})
+  })
+  .catch(err => res.status(500).json({ error: err.message }))
+})
+
+app.delete('/coffee/:id', (req, res) => {
+  knex('item')
+  .where({ id: req.params.id})
+  .del()
+  .then(count => {
+    if (count === 0) return res.status(404).json({ message: 'try again'})
+      res.json({ message: 'item deleted' })
+  })
+  .catch(err => res.status(500).json({ error: err.message }))
+})
 
 app.listen(PORT, () => {
   console.log(`The server is running on ${PORT}`);
