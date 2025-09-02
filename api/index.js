@@ -10,6 +10,9 @@ const cors = require('cors')
 app.use(express.json());
 app.use(cors());
 
+app.get('/', (request, response) => {
+        response.send('Application is running')
+    })
 
 app.get('/coffee', function(req, res) {
   knex('item')
@@ -21,9 +24,6 @@ app.get('/coffee', function(req, res) {
           'The data you are looking for could not be found. Please try again'
       })
     );
-    app.get('/', (request, response) => {
-        response.send('Application is running')
-    })
 });
 app.listen(PORT, () => {
   console.log(`The server is running on ${PORT}`);
