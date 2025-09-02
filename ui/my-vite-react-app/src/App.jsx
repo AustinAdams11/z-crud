@@ -1,28 +1,20 @@
+import { useState, useContext, createContext } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Login from './Login'; 
 
-import { useState, useEffect } from 'react'
+export const AppContext = createContext('');
 
-  function App() {
-    const [data, setData] = useState([]);
-    useEffect(() => {
-      fetch('http://localhost:8000/coffee')
-      .then(response => response.json())
-      .then(json => {
-        setData(json)
-       
-      })
-    }, [])
-console.log(data)
-return (
-  
-  <div>
-    <h1>Adams Coffee Supply</h1>
-    <ul>
-      {data.map((item) => (
-    <li key={item.id}>{item.item_name}, {item.description}, {item.quantity}</li>
-))}
-    </ul>
-  </div>
-)
+function App() {
+  const [username, setUsername] = useState("")
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  return (
+  <>
+      <AppContext.Provider value={{ username, setUsername, isLoggedIn, setIsLoggedIn }}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </AppContext.Provider>
+  </>
+  )
 }
-export default App
-
+export default App;
