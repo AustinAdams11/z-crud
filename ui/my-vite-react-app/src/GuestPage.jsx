@@ -10,8 +10,8 @@ export default function GuestPage() {
         .then(data => {
             console.log("data", data)
             setItems(data);
-    })
-}, []);
+        })
+    }, []);
 
     return (
     <div>
