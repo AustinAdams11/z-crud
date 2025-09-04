@@ -55,6 +55,10 @@ In the Google Chrome browser navigate to http://localhost:5173/
 
 There you will be greeted with the homepage and can use the application.
 
+You can use the admin username/password below.
+username: dirtymike
+password: password1
+
 Users can register with their First Name, Last Name, username, and password then log in using that info to view, add, edit, or delete coffee items. 
 
 Guests can browse the inventory without logging in through the guest page link on the home screen. Each coffee item has a name and description and a user can click on the see details link to view that product solely.
