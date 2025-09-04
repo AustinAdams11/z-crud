@@ -113,7 +113,7 @@ function HomePage() {
           onChange={(e) => setLoginPassword(e.target.value)}
           required
         />
-        <button type="submit">Log In</button>
+        <button type="submit" style={{ color: ' rgb(160, 28, 28)' }}>Log In</button>
       </form>
 
       <h2>Register</h2>
@@ -146,9 +146,9 @@ function HomePage() {
           onChange={(e) => setRegisterPassword(e.target.value)}
           required
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit" style={{ color: ' rgb(160, 28, 28)' }}>Sign Up</button>
       </form>
-      <p><button><Link to="/guest" style={{ color: 'white' }}>Guest View</Link></button></p>
+      <p><button><Link to="/guest" style={{ color: ' rgb(160, 28, 28)' }}>Guest View</Link></button></p>
     </div>
   );
 }
