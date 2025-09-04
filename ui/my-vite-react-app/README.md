@@ -1,12 +1,62 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Adams Coffee Supply
 
-Currently, two official plugins are available:
+Welcome to my Coffee Supply application! This is used for managing a coffee inventory. Below are instructions for how to spin up the application followed by an explanation of the program. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+*Clone the Repository*
+git clone https://github.com/AustinAdams11/z-crud.git
+cd z-crud
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+*Docker Setup*
+In a new terminal, run these commands to set up the Docker container
+
+docker pull postgres
+
+mkdir -p $HOME/docker/volumes/postgres
+
+docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 \
+-v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
+
+docker ps -a  (see the container you just created)
+
+docker exec -it <PSQL-Container-ID> bash (input the container ID for what you just created)
+
+psql -U postgres (logs into postgres)
+
+ CREATE DATABASE coffee;
+
+ *Spin Up Back-End*
+ Back in your cd z-crud terminal
+
+ cd api
+
+ npm install
+
+ npm run start
+
+ this will spin up the back-end at http://localhost:8000
+
+ *Spin Up Front-End*
+cd z-crud
+
+cd UI
+
+cd my-react-app
+
+ npm install 
+
+ npm run dev
+
+ this will spin up the front-end at http://localhost:5173
+
+ *Access The Application*
+In the Google Chrome browser navigate to http://localhost:5173/
+
+There you will be greeted with the homepage and can use the application.
+
+Users can register with their First Name, Last Name, username, and password then log in using that info to view, add, edit, or delete coffee items. 
+
+Guests can browse the inventory without logging in through the guest page link on the home screen. Each coffee item has a name and description and a user can click on the see details link to view that product solely.
+
+

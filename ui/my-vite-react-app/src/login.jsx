@@ -1,72 +1,156 @@
-import { useContext, useState, useEffect } from 'react';
-import { AppContext } from './App'
+import { useState, useContext } from 'react';
+import { AppContext } from './App';
+import { useNavigate, Link } from 'react-router-dom';
 
-export default function Login() {
-    const [items, setItems] = useState([]);
-    const { username, setUsername, isLoggedIn, setIsLoggedIn } = useContext(AppContext);
+function HomePage() {
 
-    useEffect(() => {
-        fetch('http://localhost:8000/coffee')
-        .then(res => res.json())
-        .then(json => setItems(json))
-    }, []);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
-    const [loginForm, setLoginForm] = useState({ username: '', password: '' });
-    const handleLoginChange = (e) => {
-      setLoginForm({...loginForm, [e.target.name]:e.target.value});
-    };
-    const handleLoginClick = () => {
-      fetch('http://localhost:8000/users/login', {
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [registerUsername, setRegisterUsername] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+
+  const { setIsLoggedIn, setUsername, setUserId } = useContext(AppContext);
+  const navigate = useNavigate();
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("login button clicked")
+    console.log("Current loginUsername:", loginUsername);
+    console.log("Current loginPassword:", loginPassword);
+    if (!loginUsername || !loginPassword) {
+      alert('Please enter both username and password');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:8000/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginForm)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.id) {
-          setIsLoggedIn(true);
-          setUsername(data.username);
-          alert('Login Successful');
-        } else {
-          alert('Login Failed');
-        }
+        body: JSON.stringify({ username: loginUsername, password: loginPassword }),
       });
-    };
-  
-return (
-  <div style={{ padding: '2rem' }}>
-    <h1>Adams Coffee Supply</h1>
+      const data = await res.json();
+      console.log('Login response:', data);
 
-    <h2>Login</h2>
-    <input 
-    name="username"
-    placeholder="Username" 
-    value={loginForm.username} 
-    onChange={handleLoginChange}/>
-    <input
-    name="password"
-    type="password"
-    placeholder="Password"
-    value={loginForm.password}
-    onChange={handleLoginChange}/>
-    <button onClick={handleLoginClick}>Login</button>
+      if (data.id) {
+        setIsLoggedIn(true);
+        setUsername(data.username);
+        setUserId(data.id);
+        alert(`Hello, ${data.username}!`);
 
-    <h2>Register</h2>
-    <form>
-       <input name="first_name" placeholder="First Name" />
-      <input name="last_name" placeholder="Last Name" />
-      <input name="username" placeholder="Username" />
-      <input name="password" type="password" placeholder="Password" />
-      <button type="submit">Register</button>
-    </form>
+        setLoginUsername('');
+        setLoginPassword('');
 
-    <h2>All Coffee Items</h2>
-    <ul>
-      {items.map(item => (
-        <li key={item.id}>
-            {item.item_name}, {item.description}, {item.quantity}
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+        navigate('/inventory');
+      } else {
+        alert(data.message || 'Invalid login');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Login failed. Please try again.');
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (!firstName || !lastName || !registerUsername || !registerPassword) {
+      alert('Please fill in all registration fields');
+      return;
+    }
+    try {
+      const res = await fetch('http://localhost:8000/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          username: registerUsername,
+          password: registerPassword,
+        }),
+      });
+
+      const data = await res.json();
+      console.log('Register response:', data);
+
+      if (data.id) {
+        alert(`Account created for ${data.username}!`);
+
+        setFirstName('');
+        setLastName('');
+        setRegisterUsername('');
+        setRegisterPassword('');
+      } else {
+        alert(data.message || 'Registration failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Registration failed. Please try again.');
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <h1>Adams Coffee Supply</h1>
+
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={loginUsername}
+          onChange={(e) => setLoginUsername(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={loginPassword}
+          onChange={(e) => setLoginPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Log In</button>
+      </form>
+
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Username"
+          value={registerUsername}
+          onChange={(e) => setRegisterUsername(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={registerPassword}
+          onChange={(e) => setRegisterPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p><button><Link to="/guest" style={{ color: 'white' }}>Guest View</Link></button></p>
+    </div>
+  );
+}
+
+export default HomePage;

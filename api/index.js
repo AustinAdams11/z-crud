@@ -1,4 +1,3 @@
-// app.js
 
 const express = require('express');
 
@@ -22,9 +21,9 @@ app.post('/users/register', function(req, res) {
     }
     knex('users')
     .insert({ first_name, last_name, username, password })
-    .then(() => {
-      res.json({
-        message: 'User registered'});
+    .returning('*')
+    .then(([newUser]) => {
+      res.json(newUser);
     })
     .catch(err => res.status(500).json({ error: err.message}))
 })
@@ -70,9 +69,10 @@ app.get('/coffee/:id', function(req, res){
 app.post('/coffee', (req, res) => {
   const item = req.body;
   knex('item')
-  .insert(item)
-  .then(() => res.json({ message: 'item added'}))
-  .catch(err => res.status(500).json({error: err.message}))
+    .insert(item)
+    .returning('*')
+    .then(([newItem]) => res.json(newItem)) 
+    .catch(err => res.status(500).json({error: err.message}))
 })
 
 app.patch('/coffee/:id', (req, res) => {
