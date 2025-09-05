@@ -56,8 +56,8 @@ In the Google Chrome browser navigate to http://localhost:5173/
 There you will be greeted with the homepage and can use the application.
 
 You can use the admin username/password below.
-username: dirtymike
-password: password1
+username: legoman
+password: password4
 
 Users can register with their First Name, Last Name, username, and password then log in using that info to view, add, edit, or delete coffee items. 
 
